@@ -1,0 +1,3095 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGITAL QUEST – ĐẤU TRƯỜNG CÔNG NGHỆ SỐ</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(56, 189, 248, 0.2);
+            --neon-blue: #38bdf8;
+            --neon-purple: #c084fc;
+            --neon-cyan: #22d3ee;
+            --neon-pink: #f472b6;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(192, 132, 252, 0.08) 0%, transparent 40%);
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Common UI Elements */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+
+        .btn {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(192, 132, 252, 0.1);
+            box-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        /* Screen 1: Home */
+        #screen-home {
+            text-align: center;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .home-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--neon-blue);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* Screen 2: Mode Selection */
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+        }
+
+        .mode-card h3 {
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+        }
+
+        .mode-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Screen 3: Quiz Gameplay */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .quiz-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .quiz-stats span {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-box {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .option-btn.correct {
+            background: rgba(52, 211, 153, 0.2) !important;
+            border-color: var(--accent-green) !important;
+            color: #34d399 !important;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(248, 113, 113, 0.2) !important;
+            border-color: var(--accent-red) !important;
+            color: #f87171 !important;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-marker {
+            font-weight: 700;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        /* Screen 4: Explanation Modal / Feedback Overlay */
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Screen 5: Result Screen */
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin: 15px 0;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+        }
+
+        /* Modals & Management Area */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: var(--neon-blue); }
+
+        .question-list-admin {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .admin-q-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .admin-q-item:last-child { border-bottom: none; }
+
+        /* Form Inputs */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Floating Controls -->
+    <div class="top-controls">
+        <button class="icon-btn" id="btn-sound" title="Bật/Tắt âm thanh" onclick="toggleSound()">🔊</button>
+        <button class="icon-btn" id="btn-fullscreen" title="Toàn màn hình" onclick="toggleFullScreen()">⛶</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SCREEN 1: HOME -->
+        <div id="screen-home" class="screen active">
+            <div class="card" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 4rem; margin-bottom: 15px;">🛡️</div>
+                <h1 class="game-title">DIGITAL QUEST</h1>
+                <p class="game-subtitle">ĐẤU TRƯỜNG CÔNG NGHỆ SỐ – Chinh phục thế giới công nghệ</p>
+                
+                <div class="home-menu">
+                    <button class="btn btn-primary" onclick="goToScreen('screen-mode')">🚀 BẮT ĐẦU THỬ THÁCH</button>
+                    <button class="btn btn-secondary" onclick="openModal('modal-guide')">📖 HƯỚNG DẪN CHƠI</button>
+                    <button class="btn btn-secondary" onclick="openModal('modal-admin')">⚙️ QUẢN LÝ CÂU HỎI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: MODE SELECTION -->
+        <div id="screen-mode" class="screen">
+            <div class="card">
+                <h2 style="color: var(--neon-cyan); margin-bottom: 10px;">CHỌN CHẾ ĐỘ CHƠI</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Lựa chọn thử thách phù hợp với trình độ ôn tập của bạn.</p>
+                
+                <div class="mode-grid">
+                    <div class="mode-card" onclick="startQuiz('khoidoch')">
+                        <h3>🟢 Chế độ Khởi động</h3>
+                        <p>Câu hỏi cơ bản, thời gian thoải mái, lý tưởng để làm quen kiến thức nền tảng.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('thuthach')">
+                        <h3>🔵 Chế độ Thử thách</h3>
+                        <p>Câu hỏi trung bình và nâng cao, có giới hạn thời gian và điểm thưởng tốc độ.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('chuyengia')">
+                        <h3>🟣 Chế độ Chuyên gia</h3>
+                        <p>Tình huống thực tế đòi hỏi tư duy phân tích sâu và vận dụng kiến thức.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('sinhton')">
+                        <h3>🔴 Chế độ Sinh tồn</h3>
+                        <p>Thử thách trả lời liên tục, giữ vững chuỗi đúng dài nhất có thể.</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="goToScreen('screen-home')">⬅ Về Trang Chủ</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: QUIZ GAMEPLAY -->
+        <div id="screen-quiz" class="screen">
+            <div class="card">
+                <div class="quiz-header">
+                    <div>
+                        <span id="lbl-mode-name" style="color: var(--neon-purple); font-weight: 700; font-family: 'Orbitron'; text-transform: uppercase;">THỬ THÁCH</span>
+                        <h3 id="lbl-question-progress" style="font-size: 1.1rem; margin-top: 2px;">Câu hỏi 1 / 10</h3>
+                    </div>
+                    <div class="quiz-stats">
+                        <div>Điểm: <span id="lbl-score">0</span></div>
+                        <div>Chuỗi đúng: <span id="lbl-streak">0</span> 🔥</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="quiz-progress-bar"></div>
+                </div>
+
+                <div class="question-box" id="lbl-question-content">
+                    Đang tải nội dung câu hỏi...
+                </div>
+
+                <div class="options-grid" id="options-container">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <div class="feedback-box" id="feedback-box">
+                    <h4 id="feedback-title" style="margin-bottom: 8px; font-family: 'Orbitron';">CHÍNH XÁC!</h4>
+                    <p id="feedback-text" style="color: var(--text-muted); font-size: 0.95rem;"></p>
+                </div>
+
+                <div class="quiz-footer" style="margin-top: 25px;">
+                    <div class="timer-badge" id="lbl-timer">⏱️ 30s</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="pauseGame()">⏸️ Tạm Dừng</button>
+                        <button class="btn btn-primary" id="btn-next" style="display: none; padding: 10px 20px; font-size: 0.9rem;" onclick="nextQuestion()">Câu Tiếp ➡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: RESULT -->
+        <div id="screen-result" class="screen">
+            <div class="card" style="text-align: center;">
+                <h2 style="color: var(--neon-cyan); font-size: 2rem; margin-bottom: 5px;">KẾT QUẢ THỬ THÁCH</h2>
+                <div class="achievement-badge" id="res-badge">🏆 TÂN BINH SỐ</div>
+                <p id="res-comment" style="color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem;"></p>
+
+                <div class="result-summary">
+                    <div class="stat-card">
+                        <h4>TỔNG ĐIỂM</h4>
+                        <p id="res-score">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>ĐÚNG / TỔNG</h4>
+                        <p id="res-correct">0/10</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>TỶ LỆ CHÍNH XÁC</h4>
+                        <p id="res-accuracy">0%</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>CHUỖI DÀI NHẤT</h4>
+                        <p id="res-streak">0</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="restartQuiz()">🔄 Chơi Lại</button>
+                    <button class="btn btn-secondary" onclick="goToScreen('screen-mode')">🎮 Đổi Chế Độ</button>
+                    <button class="btn btn-secondary" onclick="goToScreen('screen-home')">🏠 Về Trang Chủ</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: HƯỚNG DẪN CHƠI -->
+    <div class="modal" id="modal-guide">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-guide')">&times;</button>
+            <h2 style="color: var(--neon-blue); margin-bottom: 15px;">HƯỚNG DẪN LUẬT CHƠI</h2>
+            <div style="color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem;">
+                <p>🔹 <strong>Mục tiêu:</strong> Trả lời các câu hỏi trắc nghiệm về môn Nhập môn Công nghệ số để tích lũy điểm số và chinh phục các huy hiệu.</p>
+                <p>🔹 <strong>Cách tính điểm:</strong> Mỗi câu trả lời đúng nhận 100 điểm cơ bản. Ở chế độ Thử thách, trả lời nhanh sẽ được cộng thêm điểm thưởng tốc độ (tối đa 50 điểm).</p>
+                <p>🔹 <strong>Chuỗi trả lời đúng:</strong> Trả lời đúng liên tiếp giúp gia tăng chuỗi thưởng (Streak), giúp tối ưu hóa tổng điểm.</p>
+                <p>🔹 <strong>Thời gian:</strong> Mỗi câu có giới hạn thời gian đếm ngược tùy theo cấp độ. Hết thời gian sẽ tính là chưa chính xác.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: QUẢN LÝ CÂU HỎI DÀNH CHO GIẢNG VIÊN -->
+    <div class="modal" id="modal-admin">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-admin')">&times;</button>
+            <h2 style="color: var(--neon-purple); margin-bottom: 15px;">QUẢN LÝ BỘ CÂU HỎI</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Thêm mới, kiểm tra hoặc xuất/nhập tệp JSON dữ liệu câu hỏi môn học.</p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn btn-primary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="openAddQuestionForm()">➕ Thêm Câu Hỏi</button>
+                <button class="btn btn-secondary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="exportJSON()">📥 Xuất JSON</button>
+                <button class="btn btn-secondary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="document.getElementById('import-file').click()">📤 Nhập JSON</button>
+                <input type="file" id="import-file" style="display:none" accept=".json" onchange="importJSON(event)">
+                <button class="btn btn-danger" style="font-size: 0.85rem; padding: 10px 15px;" onclick="resetDefaultQuestions()">🔄 Khôi Phục Mặc Định</button>
+            </div>
+
+            <h3 style="font-size: 1rem; color: var(--neon-cyan); margin-bottom: 10px;">Danh sách câu hỏi hiện tại (<span id="admin-total-q">0</span>)</h3>
+            <div class="question-list-admin" id="admin-question-list">
+                <!-- Dynamic loaded list -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: THÊM CÂU HỎI MỚI -->
+    <div class="modal" id="modal-add-q">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-add-q')">&times;</button>
+            <h2 style="color: var(--neon-blue); margin-bottom: 15px;">THÊM CÂU HỎI MỚI</h2>
+            <form onsubmit="saveNewQuestion(event)">
+                <div class="form-group">
+                    <label>Nội dung câu hỏi:</label>
+                    <textarea id="new-q-text" rows="3" required placeholder="Nhập nội dung câu hỏi..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>Đáp án A:</label><input type="text" id="new-q-a" required></div>
+                    <div class="form-group"><label>Đáp án B:</label><input type="text" id="new-q-b" required></div>
+                    <div class="form-group"><label>Đáp án C:</label><input type="text" id="new-q-c" required></div>
+                    <div class="form-group"><label>Đáp án D:</label><input type="text" id="new-q-d" required></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Đáp án đúng:</label>
+                        <select id="new-q-correct">
+                            <option value="0">A</option>
+                            <option value="1">B</option>
+                            <option value="2">C</option>
+                            <option value="3">D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mức độ:</label>
+                        <select id="new-q-level">
+                            <option value="khoidoch">Cơ bản</option>
+                            <option value="thuthach">Trung bình</option>
+                            <option value="chuyengia">Nâng cao</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Giải thích chi tiết:</label>
+                    <textarea id="new-q-exp" rows="2" required placeholder="Giải thích vì sao đáp án đúng..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Lưu Câu Hỏi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: TẠM DỪNG -->
+    <div class="modal" id="modal-pause">
+        <div class="modal-content" style="text-align: center; max-width: 400px;">
+            <h2 style="color: var(--neon-cyan); margin-bottom: 20px;">TRÒ CHƠI TẠM DỪNG</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button class="btn btn-primary" onclick="resumeGame()">▶ Tiếp Tục</button>
+                <button class="btn btn-secondary" onclick="goToScreen('screen-mode'); closeModal('modal-pause');">🎮 Về Chọn Chế Độ</button>
+                <button class="btn btn-danger" onclick="goToScreen('screen-home'); closeModal('modal-pause');">🏠 Về Trang Chủ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BỘ CÂU HỎI MẪU CHUẨN (30 CÂU) CHO MÔN NHẬP MÔN CÔNG NGHỆ SỐ ---
+        const defaultQuestions = [
+            {
+                q: "Khái niệm 'Công nghệ số' phản ánh điều gì trong thời đại hiện nay?",
+                options: [
+                    "Việc sử dụng các thiết bị cơ khí truyền thống trong sản xuất",
+                    "Quá trình xử lý thông tin dựa trên hệ thống mã nhị phân và tín hiệu số",
+                    "Chỉ bao gồm công nghệ phát thanh và truyền hình analog",
+                    "Việc lưu trữ tài liệu hoàn toàn bằng văn bản giấy"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Công nghệ số dựa trên nền tảng mã hóa nhị phân (0 và 1) để xử lý, truyền tải và lưu trữ thông tin hiệu quả."
+            },
+            {
+                q: "Đâu là yếu tố cốt lõi phân biệt giữa 'Dữ liệu' (Data) và 'Thông tin' (Information)?",
+                options: [
+                    "Dữ liệu là thông tin đã qua xử lý và có ý nghĩa cụ thể",
+                    "Dữ liệu là các sự kiện, con số thô chưa qua xử lý, còn thông tin là dữ liệu đã được tổ chức có ý nghĩa",
+                    "Dữ liệu chỉ tồn tại trên thiết bị di động, thông tin chỉ tồn tại trên máy tính bàn",
+                    "Không có sự khác biệt nào giữa dữ liệu và thông tin"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Dữ liệu thô sau khi được phân tích, tổng hợp và đặt trong ngữ cảnh sẽ trở thành thông tin hữu ích."
+            },
+            {
+                q: "Thành phần nào sau đây thuộc về phần mềm hệ thống (System Software)?",
+                options: ["Microsoft Word", "Hệ điều hành Windows", "Phần mềm diệt virus", "Trình duyệt Chrome"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Hệ điều hành (như Windows, Linux, macOS) là phần mềm hệ thống quản lý phần cứng và cung cấp nền tảng cho phần mềm ứng dụng."
+            },
+            {
+                q: "Giao thức nào được sử dụng phổ biến nhất để truyền tải các trang web an toàn trên Internet hiện nay?",
+                options: ["FTP", "HTTPS", "SMTP", "SSH"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "HTTPS (HyperText Transfer Protocol Secure) mã hóa dữ liệu truyền tải giữa trình duyệt và máy chủ web, đảm bảo an toàn."
+            },
+            {
+                q: "Điện toán đám mây (Cloud Computing) mang lại lợi ích nổi bật nào cho doanh nghiệp và cá nhân?",
+                options: [
+                    "Bắt buộc phải mua thêm ổ cứng vật lý để lưu trữ",
+                    "Khả năng truy cập dữ liệu mọi lúc, mọi nơi qua Internet với tài nguyên linh hoạt",
+                    "Làm giảm tốc độ xử lý dữ liệu của máy tính cá nhân",
+                    "Không cần kết nối mạng vẫn sử dụng đầy đủ tính năng đám mây"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Điện toán đám mây cho phép truy cập dữ liệu và dịch vụ linh hoạt qua Internet mà không phụ thuộc vào thiết bị lưu trữ cục bộ."
+            },
+            {
+                q: "Trí tuệ nhân tạo (AI) học hỏi từ đâu để đưa ra các dự đoán hoặc quyết định?",
+                options: [
+                    "Chỉ dựa vào cảm xúc của lập trình viên",
+                    "Dựa trên khối lượng dữ liệu huấn luyện lớn (Training Data) và các thuật toán học máy",
+                    "Tự phát sinh suy nghĩ độc lập hoàn toàn không cần dữ liệu",
+                    "Chỉ dựa vào phần cứng máy tính mạnh mà không cần phần mềm"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "AI và Học máy (Machine Learning) cần lượng dữ liệu lớn để huấn luyện, nhận diện mẫu và đưa ra quyết định dự đoán."
+            },
+            {
+                q: "Biện pháp nào dưới đây tạo ra một mật khẩu mạnh và an toàn nhất?",
+                options: [
+                    "Sử dụng ngày tháng năm sinh của bản thân để dễ nhớ",
+                    "Dùng dãy số liên tiếp như 12345678",
+                    "Kết hợp chữ hoa, chữ thường, số, ký tự đặc biệt với chiều dài tối thiểu 12 ký tự",
+                    "Sử dụng tên thú cưng kết hợp số điện thoại"
+                ],
+                correct: 2,
+                level: "khoidoch",
+                explanation: "Mật khẩu mạnh cần đủ độ dài và đa dạng ký tự để chống lại các cuộc tấn công dò mật khẩu (Brute-force)."
+            },
+            {
+                q: "Xác thực đa yếu tố (MFA / 2FA) hoạt động theo nguyên tắc nào?",
+                options: [
+                    "Chỉ cần nhập mật khẩu một lần là đăng nhập thành công",
+                    "Yêu cầu từ hai hình thức xác thực khác nhau trở lên (ví dụ: mật khẩu + mã OTP qua điện thoại)",
+                    "Cho phép nhiều người cùng đăng nhập vào một tài khoản cùng lúc",
+                    "Khóa tài khoản vĩnh viễn khi đăng nhập sai một lần"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "MFA kết hợp nhiều lớp xác thực (thứ bạn biết, thứ bạn có, thứ bạn là) giúp tăng cường bảo mật tài khoản."
+            },
+            {
+                q: "'Dấu vết số' (Digital Footprint) được hiểu là gì?",
+                options: [
+                    "Dấu chân thực tế để lại trên mặt đất khi sử dụng máy tính",
+                    "Dữ liệu và dấu vết thông tin mà người dùng để lại khi hoạt động trên môi trường trực tuyến",
+                    "Lịch sử bảo trì phần cứng máy tính",
+                    "Mã nguồn của các phần mềm ứng dụng"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Dấu vết số bao gồm mọi hoạt động, bài đăng, lịch sử tìm kiếm và tương tác của bạn trên Internet."
+            },
+            {
+                q: "Công cụ nào sau đây hữu ích nhất cho việc làm việc nhóm và soạn thảo tài liệu trực tuyến đồng thời?",
+                options: ["Notepad ngoại tuyến", "Google Docs / Microsoft 365 Online", "Chương trình vẽ Paint đơn lẻ", "Trình phát nhạc Media Player"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Các công cụ văn phòng điện toán đám mây cho phép nhiều thành viên cùng chỉnh sửa và cộng tác trực tuyến theo thời gian thực."
+            },
+            {
+                q: "Một sinh viên nhận được email yêu cầu đăng nhập vào trang web lạ để xác nhận tài khoản trường. Cách xử lý an toàn nhất?",
+                options: [
+                    "Nhấp vào liên kết vì email có logo trường",
+                    "Trả lời email và gửi mật khẩu để xác minh",
+                    "Kiểm tra địa chỉ người gửi, không nhấp vào liên kết đáng ngờ và xác minh qua kênh chính thức",
+                    "Chuyển tiếp email cho bạn bè để hỏi ý kiến rồi mới đăng nhập"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Logo có thể giả mạo. Luôn kiểm tra kỹ địa chỉ nguồn gửi và xác thực thông tin qua kênh chính thống của tổ chức."
+            },
+            {
+                q: "Khi đọc một bài viết trực tuyến có tựa đề giật gân, thông tin chưa được kiểm chứng, hành động đúng đắn của người học là gì?",
+                options: [
+                    "Chia sẻ ngay lên mạng xã hội cho nhiều người biết",
+                    "Tin tưởng tuyệt đối vì bài viết có nhiều lượt tương tác",
+                    "Kiểm tra nguồn gốc, đối chiếu với các cơ quan báo chí uy tín trước khi chia sẻ",
+                    "Xóa bỏ tài khoản mạng xã hội ngay lập tức"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Đánh giá độ tin cậy của thông tin đòi hỏi kỹ năng tư duy phản biện và kiểm chứng đa nguồn."
+            },
+            {
+                q: "Địa chỉ IP (Internet Protocol) có vai trò gì trong mạng máy tính?",
+                options: [
+                    "Định danh duy nhất cho mỗi thiết bị kết nối mạng để truyền gửi dữ liệu chính xác",
+                    "Tăng tốc độ kết nối đường truyền Internet lên gấp đôi",
+                    "Lưu trữ dữ liệu cá nhân của người dùng trên đám mây",
+                    "Ngăn chặn hoàn toàn các cuộc tấn công mạng từ bên ngoài"
+                ],
+                correct: 0,
+                level: "thuthach",
+                explanation: "Địa chỉ IP đóng vai trò như 'địa chỉ nhà' của thiết bị trong mạng Internet giúp gói tin đến đúng đích."
+            },
+            {
+                q: "Sự khác biệt chính giữa RAM và ổ cứng SSD trong máy tính là gì?",
+                options: [
+                    "RAM lưu trữ lâu dài khi tắt máy, SSD chỉ lưu trữ tạm thời",
+                    "RAM là bộ nhớ truy xuất ngẫu nhiên tốc độ cao, mất dữ liệu khi tắt máy; SSD lưu trữ dữ liệu lâu dài",
+                    "Cả RAM và SSD đều có chức năng hoàn toàn giống nhau",
+                    "SSD dùng để hiển thị hình ảnh, RAM dùng để kết nối Internet"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "RAM là bộ nhớ ngắn hạn tốc độ cao phục vụ tác vụ đang chạy; SSD là thiết bị lưu trữ dài hạn không bị mất dữ liệu khi tắt nguồn."
+            },
+            {
+                q: "Hành vi nào vi phạm đạo đức và quy tắc ứng xử trên môi trường số?",
+                options: [
+                    "Trích dẫn nguồn tài liệu khi sử dụng bài viết của người khác",
+                    "Tôn trọng quyền riêng tư và ý kiến của người dùng khác",
+                    "Đăng tải hình ảnh cá nhân người khác lên mạng khi chưa có sự đồng ý nhằm bôi nhọ",
+                    "Sử dụng phần mềm bản quyền hoặc mã nguồn mở tuân thủ giấy phép"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Đăng ảnh bôi nhọ hoặc xâm phạm quyền riêng tư là hành vi vi phạm pháp luật và đạo đức số nghiêm trọng."
+            },
+            {
+                q: "Bảo mật dữ liệu cá nhân trên mạng xã hội đạt hiệu quả cao nhất khi bạn thực hiện thao tác nào?",
+                options: [
+                    "Công khai toàn bộ số điện thoại, địa chỉ và ngày sinh lên trang cá nhân",
+                    "Thiết lập chế độ riêng tư cho tài khoản và hạn chế chia sẻ thông tin nhạy cảm",
+                    "Cho phép mọi ứng dụng bên thứ ba truy cập danh bạ",
+                    "Sử dụng chung một mật khẩu cho tất cả các nền tảng mạng xã hội"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Cấu hình quyền riêng tư chặt chẽ giúp bảo vệ thông tin cá nhân khỏi các nguy cơ thu thập dữ liệu trái phép."
+            },
+            {
+                q: "Khi máy tính bị nhiễm phần mềm độc hại (Malware), dấu hiệu nào thường xuất hiện?",
+                options: [
+                    "Máy chạy nhanh hơn bình thường và hiển thị nhiều tính năng mới",
+                    "Máy chạy chậm đột ngột, xuất hiện cửa sổ quảng cáo lạ, tệp tin bị mã hóa hoặc mất kiểm soát",
+                    "Thời lượng pin kéo dài gấp đôi",
+                    "Kết nối Internet ổn định và bảo mật tuyệt đối"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Malware thường làm tiêu tốn tài nguyên hệ thống, gây chậm máy, hiển thị quảng cáo rác hoặc tống tiền dữ liệu (Ransomware)."
+            },
+            {
+                q: "Khái niệm 'Dữ liệu lớn' (Big Data) được trưng bày qua các đặc tính nào?",
+                options: [
+                    "Chỉ có dung lượng lớn nhưng tốc độ xử lý chậm",
+                    "Đặc trưng bởi các yếu tố: Khối lượng (Volume), Tốc độ (Velocity), Đa dạng (Variety), Độ chính xác (Veracity) và Giá trị (Value)",
+                    "Chỉ bao gồm dữ liệu dạng văn bản đơn thuần",
+                    "Dữ liệu chỉ lưu trữ trên một máy tính cá nhân duy nhất"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Big Data được định nghĩa qua mô hình các chữ V (Volume, Velocity, Variety, Veracity, Value) đòi hỏi công cụ xử lý chuyên biệt."
+            },
+            {
+                q: "Tường lửa (Firewall) trong hệ thống mạng có chức năng chính là gì?",
+                options: [
+                    "Làm mát phần cứng máy tính khi hoạt động quá công suất",
+                    "Kiểm soát và lọc lưu lượng truy cập ra vào mạng dựa trên các quy tắc bảo mật đã thiết lập",
+                    "Tăng tốc độ tải xuống tệp tin từ Internet",
+                    "Tự động viết mã nguồn phần mềm cho lập trình viên"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Tường lửa đóng vai trò là 'cổng gác' kiểm soát các gói tin ra vào, ngăn chặn truy cập trái phép vào hệ thống."
+            },
+            {
+                q: "Khi thực hiện học tập trực tuyến, việc sử dụng các công cụ lưu trữ đám mây giúp sinh viên giải quyết vấn đề gì?",
+                options: [
+                    "Tránh tình trạng mất bài tập khi máy tính cá nhân hỏng hóc",
+                    "Dễ dàng chia sẻ tài liệu và làm việc nhóm từ xa",
+                    "Đồng bộ hóa dữ liệu giữa laptop, máy tính bảng và điện thoại",
+                    "Tất cả các phương án trên đều chính xác"
+                ],
+                correct: 3,
+                level: "thuthach",
+                explanation: "Lưu trữ đám mây mang lại sự an toàn dữ liệu, khả năng cộng tác nhóm và đồng bộ hóa đa thiết bị tối ưu."
+            },
+            {
+                q: "Tình huống: Một người lạ gửi tin nhắn qua mạng xã hội thông báo bạn trúng thưởng lớn nhưng yêu cầu nộp trước một khoản phí nhỏ qua thẻ cào. Bạn nên ứng xử thế nào?",
+                options: [
+                    "Nộp phí ngay để nhận phần thưởng giá trị",
+                    "Cung cấp thông tin tài khoản ngân hàng cho họ",
+                    "Nhận diện đây là thủ đoạn lừa đảo trực tuyến phổ biến, chặn và báo cáo tài khoản đó",
+                    "Hỏi mượn tiền người thân để nộp phí nhận thưởng"
+                ],
+                correct: 2,
+                level: "chuyengia",
+                explanation: "Yêu cầu nộp phí trước để nhận thưởng là dấu hiệu kinh điển của lừa đảo trực tuyến (Scam/Phishing)."
+            },
+            {
+                q: "Tại sao việc sử dụng các phần mềm bẻ khóa (Crack) không có bản quyền lại tiềm ẩn rủi ro lớn về an toàn thông tin?",
+                options: [
+                    "Vì phần mềm crack thường bị nhà phát triển chính hãng phạt tiền trực tiếp",
+                    "Vì các bản crack thường được đính kèm mã độc, phần mềm gián điệp hoặc backdoor đánh cắp dữ liệu",
+                    "Vì phần mềm crack chạy nhanh hơn phần mềm bản quyền",
+                    "Không có rủi ro nào đáng kể"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Phần mềm crack thường bị can thiệp mã nguồn, ẩn chứa mã độc tống tiền hoặc đánh cắp thông tin đăng nhập của người dùng."
+            },
+            {
+                q: "Trong bối cảnh chuyển đổi số, năng lực số (Digital Competence) của sinh viên đại học bao gồm yếu tố nào?",
+                options: [
+                    "Chỉ biết cách chơi game và lướt mạng xã hội",
+                    "Khả năng tìm kiếm, đánh giá, sáng tạo nội dung số và ứng dụng công nghệ có trách nhiệm, an toàn",
+                    "Khả năng sửa chữa phần cứng điện thoại di động",
+                    "Chỉ cần biết sử dụng Microsoft Word cơ bản"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Năng lực số là tập hợp toàn diện các kỹ năng từ thông tin, truyền thông, sáng tạo nội dung đến an toàn thông tin số."
+            },
+            {
+                q: "Hành động nào thể hiện tư duy bảo mật chủ động khi sử dụng mạng Wi-Fi công cộng tại quán cà phê?",
+                options: [
+                    "Truy cập tài khoản ngân hàng và giao dịch tài chính thoải mái",
+                    "Sử dụng mạng riêng ảo (VPN) và hạn chế truy cập các tài khoản nhạy cảm trên mạng không bảo mật",
+                    "Tắt hoàn toàn phần mềm diệt virus trên máy tính",
+                    "Chia sẻ mật khẩu Wi-Fi cho tất cả mọi người xung quanh"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Wi-Fi công cộng dễ bị tấn công kiểu 'Man-in-the-middle'. Sử dụng VPN giúp mã hóa dữ liệu truyền qua các mạng không an toàn này."
+            },
+            {
+                q: "Khi doanh nghiệp áp dụng mô hình Điện toán đám mây dạng SaaS (Software as a Service), người dùng cuối sử dụng dịch vụ như thế nào?",
+                options: [
+                    "Phải tự lập trình lại toàn bộ hệ điều hành từ đầu",
+                    "Sử dụng phần mềm trực tiếp qua trình duyệt web mà không cần cài đặt phức tạp (ví dụ: Google Workspace, Microsoft 365)",
+                    "Phải mua máy chủ vật lý đặt tại văn phòng",
+                    "Chỉ được phép sử dụng ngoại tuyến"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "SaaS cung cấp ứng dụng phần mềm qua Internet dưới dạng dịch vụ sẵn sàng sử dụng (như Gmail, Google Docs)."
+            },
+            {
+                q: "Trí tuệ nhân tạo tạo sinh (Generative AI như ChatGPT, Claude) hỗ trợ sinh viên học tập hiệu quả nhất khi được sử dụng theo cách nào?",
+                options: [
+                    "Để AI làm thay toàn bộ bài tập và luận văn mà không cần kiểm chứng",
+                    "Sử dụng làm trợ lý ảo giải thích khái niệm, gợi ý ý tưởng và hỗ trợ tổng hợp tài liệu dưới sự kiểm soát và tư duy phản biện của bản thân",
+                    "Tin tưởng tuyệt đối vào mọi thông tin do AI cung cấp mà không cần đối chiếu",
+                    "Dùng để phát tán tin giả trên mạng xã hội"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "AI tạo sinh là trợ lý đắc lực hỗ trợ học tập khi sinh viên giữ vai trò chủ động kiểm chứng, tư duy và phản biện."
+            },
+            {
+                q: "Chính sách bảo vệ dữ liệu cá nhân (như GDPR tại châu Âu hoặc các nghị định tại Việt Nam) nhằm mục đích cốt lõi gì?",
+                options: [
+                    "Ngăn cấm hoàn toàn việc trao đổi thông tin trên Internet",
+                    "Trao cho cá nhân quyền kiểm soát dữ liệu của mình và buộc các tổ chức thu thập dữ liệu phải có trách nhiệm minh bạch, bảo mật",
+                    "Làm chậm quá trình phát triển công nghệ số",
+                    "Chỉ bảo vệ dữ liệu của các cơ quan chính phủ"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Các quy định bảo vệ dữ liệu đặt quyền kiểm soát thông tin cá nhân vào tay người dùng và yêu cầu doanh nghiệp tuân thủ chuẩn bảo mật."
+            },
+            {
+                q: "Trong an toàn thông tin, nguyên tắc 'Đặc quyền tối thiểu' (Principle of Least Privilege) có ý nghĩa gì?",
+                options: [
+                    "Cấp quyền truy cập tối đa cho tất cả người dùng trong hệ thống để tiện làm việc",
+                    "Chỉ cấp cho người dùng hoặc tiến trình những quyền hạn tối thiểu cần thiết để hoàn thành nhiệm vụ được giao",
+                    "Không cho phép bất kỳ ai truy cập vào hệ thống máy chủ",
+                    "Mọi nhân viên đều có quyền quản trị tối cao (Admin)"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Nguyên tắc đặc quyền tối thiểu giúp giới hạn phạm vi thiệt hại nếu một tài khoản bị xâm phạm hoặc rò rỉ."
+            },
+            {
+                q: "Khi thực hiện nghiên cứu tài liệu trên Internet cho bài tập lớn, phương pháp đánh giá tính xác thực của nguồn tin nào chuyên nghiệp nhất?",
+                options: [
+                    "Chỉ đọc các bài đăng trên blog cá nhân không rõ tác giả",
+                    "Tham khảo các tạp chí khoa học có phản biện (peer-reviewed), sách chuyên khảo và cổng thông tin chính thống của các tổ chức giáo dục",
+                    "Dựa vào số lượng lượt xem và lượt thích trên mạng xã hội",
+                    "Chỉ sử dụng thông tin từ các video giải trí ngắn"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Nguồn tin học thuật có phản biện và các tổ chức chính thống đảm bảo tính khách quan, kiểm chứng và độ tin cậy cao nhất."
+            },
+            {
+                q: "Hành vi ứng xử có văn hóa và trách nhiệm trên môi trường số (Digital Citizenship) đòi hỏi điều gì ở sinh viên?",
+                options: [
+                    "Ẩn danh để công kích và lăng mạ người khác trên không gian mạng",
+                    "Tôn trọng bản quyền tác giả, ứng xử lịch sự, bảo vệ thông tin cá nhân và lan tỏa tri thức tích cực",
+                    "Sử dụng tài khoản giả để thao túng dư luận",
+                    "Sao chép toàn bộ bài làm của người khác mà không trích dẫn"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Công dân số có trách nhiệm luôn tôn trọng pháp luật, đạo đức, bản quyền và xây dựng cộng đồng mạng lành mạnh."
+            }
+        ];
+
+        // --- GAME STATE ---
+        let questions = [];
+        let currentQuizQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let maxStreak = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let timer = null;
+        let timeLeft = 30;
+        let currentMode = 'thuthach';
+        let isAnswerLocked = false;
+        let soundEnabled = true;
+        let gameStartTime = 0;
+
+        // Load questions from LocalStorage or Fallback to Default
+        function loadQuestionsData() {
+            const saved = localStorage.getItem('digital_quest_questions');
+            if (saved) {
+                try {
+                    questions = JSON.parse(saved);
+                } catch(e) {
+                    questions = [...defaultQuestions];
+                }
+            } else {
+                questions = [...defaultQuestions];
+            }
+            updateAdminQuestionList();
+        }
+
+        function saveQuestionsData() {
+            localStorage.setItem('digital_quest_questions', JSON.stringify(questions));
+            updateAdminQuestionList();
+        }
+
+        // --- WEB AUDIO API (No external assets required) ---
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.setValueAtTime(150, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                }
+            } catch(e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('btn-sound');
+            btn.textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        // --- NAVIGATION & SCREENS ---
+        function goToScreen(screenId) {
+            playSound('click');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if(screenId !== 'screen-quiz') {
+                clearInterval(timer);
+            }
+        }
+
+        function openModal(modalId) {
+            playSound('click');
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            playSound('click');
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Không thể chuyển chế độ toàn màn hình: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz(mode) {
+            playSound('click');
+            currentMode = mode;
+            
+            // Filter questions based on mode or pick random subset of 10
+            let pool = [...questions];
+            if (mode === 'khoidoch') {
+                pool = questions.filter(q => q.level === 'khoidoch');
+                if (pool.length < 5) pool = [...questions];
+            } else if (mode === 'chuyengia') {
+                pool = questions.filter(q => q.level === 'chuyengia');
+                if (pool.length < 5) pool = [...questions];
+            }
+
+            // Shuffle pool
+            pool.sort(() => Math.random() - 0.5);
+            
+            // Take 10 questions max
+            currentQuizQuestions = pool.slice(0, 10);
+            if (currentQuizQuestions.length === 0) currentQuizQuestions = [...questions].slice(0, 5);
+
+            // Reset state
+            currentIndex = 0;
+            score = 0;
+            streak = 0;
+            maxStreak = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            gameStartTime = Date.now();
+
+            const modeNames = {
+                'khoidoch': 'Khởi Động',
+                'thuthach': 'Thử Thách',
+                'chuyengia': 'Chuyên Gia',
+                'sinhton': 'Sinh Tồn'
+            };
+            document.getElementById('lbl-mode-name').textContent = modeNames[mode] || 'Thử Thách';
+
+            goToScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswerLocked = false;
+            clearInterval(timer);
+
+            if (currentIndex >= currentQuizQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const qData = currentQuizQuestions[currentIndex];
+            
+            // Update Progress & UI
+            document.getElementById('lbl-question-progress').textContent = `Câu hỏi ${currentIndex + 1} / ${currentQuizQuestions.length}`;
+            const progressPercent = ((currentIndex) / currentQuizQuestions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('lbl-score').textContent = score;
+            document.getElementById('lbl-streak').textContent = streak;
+            document.getElementById('lbl-question-content').textContent = qData.q;
+
+            // Hide feedback
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.classList.remove('show');
+            document.getElementById('btn-next').style.display = 'none';
+
+            // Shuffle options while preserving correct answer mapping
+            let optionsWithIndex = qData.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+            optionsWithIndex.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const markers = ['A', 'B', 'C', 'D'];
+            optionsWithIndex.forEach((item, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-marker">${markers[idx]}.</span> <span>${item.text}</span>`;
+                btn.onclick = () => selectAnswer(item.originalIndex, qData.correct, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Timer setup (30s per question)
+            timeLeft = currentMode === 'khoidoch' ? 45 : 30;
+            document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeout(qData.correct);
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(selectedIndex, correctIndex, selectedBtn) {
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+            clearInterval(timer);
+
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            let isCorrect = (selectedIndex === correctIndex);
+            const qData = currentQuizQuestions[currentIndex];
+
+            // Highlight buttons
+            buttons.forEach(btn => {
+                const markerText = btn.querySelector('.option-marker').textContent.replace('.', '').trim();
+                const mapMarkerToIdx = {'A':0, 'B':1, 'C':2, 'D':3};
+                const actualIdx = mapMarkerToIdx[markerText];
+                
+                if (actualIdx === correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (actualIdx === selectedIndex && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            feedbackBox.classList.add('show');
+
+            if (isCorrect) {
+                playSound('correct');
+                correctCount++;
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+
+                // Scoring formula: Base 100 + speed bonus + streak bonus
+                let speedBonus = Math.floor(timeLeft * 1.5);
+                let streakBonus = Math.min(streak * 10, 50);
+                let earnedScore = 100 + speedBonus + streakBonus;
+                score += earnedScore;
+
+                document.getElementById('lbl-score').textContent = score;
+                document.getElementById('lbl-streak').textContent = streak;
+
+                feedbackTitle.style.color = 'var(--accent-green)';
+                feedbackTitle.textContent = `CHÍNH XÁC! (+${earnedScore} điểm)`;
+                feedbackText.textContent = qData.explanation;
+            } else {
+                playSound('incorrect');
+                incorrectCount++;
+                streak = 0;
+                document.getElementById('lbl-streak').textContent = streak;
+
+                feedbackTitle.style.color = 'var(--accent-red)';
+                feedbackTitle.textContent = 'CHƯA CHÍNH XÁC!';
+                feedbackText.textContent = qData.explanation;
+            }
+
+            document.getElementById('btn-next').style.display = 'inline-flex';
+        }
+
+        function handleTimeout(correctIndex) {
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            buttons.forEach(btn => {
+                const markerText = btn.querySelector('.option-marker').textContent.replace('.', '').trim();
+                const mapMarkerToIdx = {'A':0, 'B':1, 'C':2, 'D':3};
+                if (mapMarkerToIdx[markerText] === correctIndex) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            playSound('incorrect');
+            incorrectCount++;
+            streak = 0;
+            document.getElementById('lbl-streak').textContent = streak;
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            feedbackBox.classList.add('show');
+
+            feedbackTitle.style.color = 'var(--accent-red)';
+            feedbackTitle.textContent = 'HẾT THỜI GIAN!';
+            feedbackText.textContent = currentQuizQuestions[currentIndex].explanation;
+
+            document.getElementById('btn-next').style.display = 'inline-flex';
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function pauseGame() {
+            if(document.getElementById('screen-quiz').classList.contains('active')) {
+                clearInterval(timer);
+                openModal('modal-pause');
+            }
+        }
+
+        function resumeGame() {
+            closeModal('modal-pause');
+            if (!isAnswerLocked && timeLeft > 0) {
+                timer = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        handleTimeout(currentQuizQuestions[currentIndex].correct);
+                    }
+                }, 1000);
+            }
+        }
+
+        function endQuiz() {
+            goToScreen('screen-result');
+            
+            const totalQ = currentQuizQuestions.length;
+            const accuracy = totalQ > 0 ? Math.round((correctCount / totalQ) * 100) : 0;
+            
+            document.getElementById('res-score').textContent = score;
+            document.getElementById('res-correct').textContent = `${correctCount}/${totalQ}`;
+            document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('res-streak').textContent = maxStreak;
+
+            // Achievement Badge & Positive Feedback
+            let badge = '🛡️ TÂN BINH SỐ';
+            let comment = 'Khởi đầu tốt! Hãy tiếp tục rèn luyện để nắm vững kiến thức công nghệ số nhé.';
+
+            if (accuracy >= 90) {
+                badge = '👑 BẬC THẦY CÔNG NGHỆ';
+                comment = 'Xuất sắc tuyệt đối! Bạn đã làm chủ hoàn toàn các kiến thức cốt lõi của môn Nhập môn Công nghệ số.';
+            } else if (accuracy >= 70) {
+                badge = '💻 CHUYÊN GIA DỮ LIỆU';
+                comment = 'Kết quả rất ấn tượng! Kiến thức công nghệ số của bạn cực kỳ vững vàng.';
+            } else if (accuracy >= 50) {
+                badge = '🚀 NHÀ KHÁM PHÁ SỐ';
+                comment = 'Cố gắng rất tốt! Ôn tập thêm một chút nữa là bạn sẽ đạt kết quả hoàn hảo.';
+            }
+
+            document.getElementById('res-badge').textContent = badge;
+            document.getElementById('res-comment').textContent = comment;
+        }
+
+        function restartQuiz() {
+            startQuiz(currentMode);
+        }
+
+        // --- ADMIN & QUESTION MANAGEMENT ---
+        function updateAdminQuestionList() {
+            const listContainer = document.getElementById('admin-question-list');
+            document.getElementById('admin-total-q').textContent = questions.length;
+            listContainer.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-q-item';
+                item.innerHTML = `
+                    <div style="flex: 1; padding-right: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <b>#${idx + 1}</b> [${q.level}] ${q.q}
+                    </div>
+                    <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.75rem;" onclick="deleteQuestion(${idx})">Xóa</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function openAddQuestionForm() {
+            openModal('modal-add-q');
+        }
+
+        function saveNewQuestion(event) {
+            event.preventDefault();
+            const text = document.getElementById('new-q-text').value.trim();
+            const a = document.getElementById('new-q-a').value.trim();
+            const b = document.getElementById('new-q-b').value.trim();
+            const c = document.getElementById('new-q-c').value.trim();
+            const d = document.getElementById('new-q-d').value.trim();
+            const correct = parseInt(document.getElementById('new-q-correct').value);
+            const level = document.getElementById('new-q-level').value;
+            const exp = document.getElementById('new-q-exp').value.trim();
+
+            if (!text || !a || !b || !c || !d || !exp) {
+                alert('Vui lòng điền đầy đủ thông tin câu hỏi!');
+                return;
+            }
+
+            const newQ = {
+                q: text,
+                options: [a, b, c, d],
+                correct: correct,
+                level: level,
+                explanation: exp
+            };
+
+            questions.push(newQ);
+            saveQuestionsData();
+            closeModal('modal-add-q');
+            alert('Đã thêm câu hỏi thành công!');
+            event.target.reset();
+        }
+
+        function deleteQuestion(index) {
+            if (confirm(`Bạn có chắc chắn muốn xóa câu hỏi #${index + 1} không?`)) {
+                questions.splice(index, 1);
+                saveQuestionsData();
+            }
+        }
+
+        function resetDefaultQuestions() {
+            if (confirm('Bạn có chắc muốn khôi phục bộ câu hỏi mẫu mặc định ban đầu không? Mọi thay đổi sẽ bị ghi đè.')) {
+                questions = [...defaultQuestions];
+                saveQuestionsData();
+                alert('Đã khôi phục bộ câu hỏi mẫu thành công!');
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "digital_quest_questions.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importJSON(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function (e) {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if (Array.isArray(imported) && imported.length > 0) {
+                            questions = imported;
+                            saveQuestionsData();
+                            alert(`Đã nhập thành công ${questions.length} câu hỏi vào hệ thống!`);
+                        } else {
+                            alert('Tệp JSON không hợp lệ hoặc không chứa dữ liệu câu hỏi.');
+                        }
+                    } catch (error) {
+                        alert('Lỗi đọc tệp JSON: ' + error.message);
+                    }
+                };
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            loadQuestionsData();
+        };
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGITAL QUEST – ĐẤU TRƯỜNG CÔNG NGHỆ SỐ</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(56, 189, 248, 0.2);
+            --neon-blue: #38bdf8;
+            --neon-purple: #c084fc;
+            --neon-cyan: #22d3ee;
+            --neon-pink: #f472b6;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(192, 132, 252, 0.08) 0%, transparent 40%);
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Common UI Elements */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+
+        .btn {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(192, 132, 252, 0.1);
+            box-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        /* Screen 1: Home */
+        #screen-home {
+            text-align: center;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .home-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--neon-blue);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* Screen 2: Mode Selection */
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+        }
+
+        .mode-card h3 {
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+        }
+
+        .mode-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Screen 3: Quiz Gameplay */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .quiz-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .quiz-stats span {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-box {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .option-btn.correct {
+            background: rgba(52, 211, 153, 0.2) !important;
+            border-color: var(--accent-green) !important;
+            color: #34d399 !important;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(248, 113, 113, 0.2) !important;
+            border-color: var(--accent-red) !important;
+            color: #f87171 !important;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-marker {
+            font-weight: 700;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        /* Screen 4: Explanation Modal / Feedback Overlay */
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Screen 5: Result Screen */
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin: 15px 0;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+        }
+
+        /* Modals & Management Area */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: var(--neon-blue); }
+
+        .question-list-admin {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .admin-q-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .admin-q-item:last-child { border-bottom: none; }
+
+        /* Form Inputs */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Floating Controls -->
+    <div class="top-controls">
+        <button class="icon-btn" id="btn-sound" title="Bật/Tắt âm thanh" onclick="toggleSound()">🔊</button>
+        <button class="icon-btn" id="btn-fullscreen" title="Toàn màn hình" onclick="toggleFullScreen()">⛶</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SCREEN 1: HOME -->
+        <div id="screen-home" class="screen active">
+            <div class="card" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 4rem; margin-bottom: 15px;">🛡️</div>
+                <h1 class="game-title">DIGITAL QUEST</h1>
+                <p class="game-subtitle">ĐẤU TRƯỜNG CÔNG NGHỆ SỐ – Chinh phục thế giới công nghệ</p>
+                
+                <div class="home-menu">
+                    <button class="btn btn-primary" onclick="goToScreen('screen-mode')">🚀 BẮT ĐẦU THỬ THÁCH</button>
+                    <button class="btn btn-secondary" onclick="openModal('modal-guide')">📖 HƯỚNG DẪN CHƠI</button>
+                    <button class="btn btn-secondary" onclick="openModal('modal-admin')">⚙️ QUẢN LÝ CÂU HỎI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: MODE SELECTION -->
+        <div id="screen-mode" class="screen">
+            <div class="card">
+                <h2 style="color: var(--neon-cyan); margin-bottom: 10px;">CHỌN CHẾ ĐỘ CHƠI</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Lựa chọn thử thách phù hợp với trình độ ôn tập của bạn.</p>
+                
+                <div class="mode-grid">
+                    <div class="mode-card" onclick="startQuiz('khoidoch')">
+                        <h3>🟢 Chế độ Khởi động</h3>
+                        <p>Câu hỏi cơ bản, thời gian thoải mái, lý tưởng để làm quen kiến thức nền tảng.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('thuthach')">
+                        <h3>🔵 Chế độ Thử thách</h3>
+                        <p>Câu hỏi trung bình và nâng cao, có giới hạn thời gian và điểm thưởng tốc độ.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('chuyengia')">
+                        <h3>🟣 Chế độ Chuyên gia</h3>
+                        <p>Tình huống thực tế đòi hỏi tư duy phân tích sâu và vận dụng kiến thức.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('sinhton')">
+                        <h3>🔴 Chế độ Sinh tồn</h3>
+                        <p>Thử thách trả lời liên tục, giữ vững chuỗi đúng dài nhất có thể.</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="goToScreen('screen-home')">⬅ Về Trang Chủ</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: QUIZ GAMEPLAY -->
+        <div id="screen-quiz" class="screen">
+            <div class="card">
+                <div class="quiz-header">
+                    <div>
+                        <span id="lbl-mode-name" style="color: var(--neon-purple); font-weight: 700; font-family: 'Orbitron'; text-transform: uppercase;">THỬ THÁCH</span>
+                        <h3 id="lbl-question-progress" style="font-size: 1.1rem; margin-top: 2px;">Câu hỏi 1 / 10</h3>
+                    </div>
+                    <div class="quiz-stats">
+                        <div>Điểm: <span id="lbl-score">0</span></div>
+                        <div>Chuỗi đúng: <span id="lbl-streak">0</span> 🔥</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="quiz-progress-bar"></div>
+                </div>
+
+                <div class="question-box" id="lbl-question-content">
+                    Đang tải nội dung câu hỏi...
+                </div>
+
+                <div class="options-grid" id="options-container">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <div class="feedback-box" id="feedback-box">
+                    <h4 id="feedback-title" style="margin-bottom: 8px; font-family: 'Orbitron';">CHÍNH XÁC!</h4>
+                    <p id="feedback-text" style="color: var(--text-muted); font-size: 0.95rem;"></p>
+                </div>
+
+                <div class="quiz-footer" style="margin-top: 25px;">
+                    <div class="timer-badge" id="lbl-timer">⏱️ 30s</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="pauseGame()">⏸️ Tạm Dừng</button>
+                        <button class="btn btn-primary" id="btn-next" style="display: none; padding: 10px 20px; font-size: 0.9rem;" onclick="nextQuestion()">Câu Tiếp ➡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: RESULT -->
+        <div id="screen-result" class="screen">
+            <div class="card" style="text-align: center;">
+                <h2 style="color: var(--neon-cyan); font-size: 2rem; margin-bottom: 5px;">KẾT QUẢ THỬ THÁCH</h2>
+                <div class="achievement-badge" id="res-badge">🏆 TÂN BINH SỐ</div>
+                <p id="res-comment" style="color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem;"></p>
+
+                <div class="result-summary">
+                    <div class="stat-card">
+                        <h4>TỔNG ĐIỂM</h4>
+                        <p id="res-score">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>ĐÚNG / TỔNG</h4>
+                        <p id="res-correct">0/10</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>TỶ LỆ CHÍNH XÁC</h4>
+                        <p id="res-accuracy">0%</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>CHUỖI DÀI NHẤT</h4>
+                        <p id="res-streak">0</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="restartQuiz()">🔄 Chơi Lại</button>
+                    <button class="btn btn-secondary" onclick="goToScreen('screen-mode')">🎮 Đổi Chế Độ</button>
+                    <button class="btn btn-secondary" onclick="goToScreen('screen-home')">🏠 Về Trang Chủ</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: HƯỚNG DẪN CHƠI -->
+    <div class="modal" id="modal-guide">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-guide')">&times;</button>
+            <h2 style="color: var(--neon-blue); margin-bottom: 15px;">HƯỚNG DẪN LUẬT CHƠI</h2>
+            <div style="color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem;">
+                <p>🔹 <strong>Mục tiêu:</strong> Trả lời các câu hỏi trắc nghiệm về môn Nhập môn Công nghệ số để tích lũy điểm số và chinh phục các huy hiệu.</p>
+                <p>🔹 <strong>Cách tính điểm:</strong> Mỗi câu trả lời đúng nhận 100 điểm cơ bản. Ở chế độ Thử thách, trả lời nhanh sẽ được cộng thêm điểm thưởng tốc độ (tối đa 50 điểm).</p>
+                <p>🔹 <strong>Chuỗi trả lời đúng:</strong> Trả lời đúng liên tiếp giúp gia tăng chuỗi thưởng (Streak), giúp tối ưu hóa tổng điểm.</p>
+                <p>🔹 <strong>Thời gian:</strong> Mỗi câu có giới hạn thời gian đếm ngược tùy theo cấp độ. Hết thời gian sẽ tính là chưa chính xác.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: QUẢN LÝ CÂU HỎI DÀNH CHO GIẢNG VIÊN -->
+    <div class="modal" id="modal-admin">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-admin')">&times;</button>
+            <h2 style="color: var(--neon-purple); margin-bottom: 15px;">QUẢN LÝ BỘ CÂU HỎI</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Thêm mới, kiểm tra hoặc xuất/nhập tệp JSON dữ liệu câu hỏi môn học.</p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn btn-primary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="openAddQuestionForm()">➕ Thêm Câu Hỏi</button>
+                <button class="btn btn-secondary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="exportJSON()">📥 Xuất JSON</button>
+                <button class="btn btn-secondary" style="font-size: 0.85rem; padding: 10px 15px;" onclick="document.getElementById('import-file').click()">📤 Nhập JSON</button>
+                <input type="file" id="import-file" style="display:none" accept=".json" onchange="importJSON(event)">
+                <button class="btn btn-danger" style="font-size: 0.85rem; padding: 10px 15px;" onclick="resetDefaultQuestions()">🔄 Khôi Phục Mặc Định</button>
+            </div>
+
+            <h3 style="font-size: 1rem; color: var(--neon-cyan); margin-bottom: 10px;">Danh sách câu hỏi hiện tại (<span id="admin-total-q">0</span>)</h3>
+            <div class="question-list-admin" id="admin-question-list">
+                <!-- Dynamic loaded list -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: THÊM CÂU HỎI MỚI -->
+    <div class="modal" id="modal-add-q">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('modal-add-q')">&times;</button>
+            <h2 style="color: var(--neon-blue); margin-bottom: 15px;">THÊM CÂU HỎI MỚI</h2>
+            <form onsubmit="saveNewQuestion(event)">
+                <div class="form-group">
+                    <label>Nội dung câu hỏi:</label>
+                    <textarea id="new-q-text" rows="3" required placeholder="Nhập nội dung câu hỏi..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>Đáp án A:</label><input type="text" id="new-q-a" required></div>
+                    <div class="form-group"><label>Đáp án B:</label><input type="text" id="new-q-b" required></div>
+                    <div class="form-group"><label>Đáp án C:</label><input type="text" id="new-q-c" required></div>
+                    <div class="form-group"><label>Đáp án D:</label><input type="text" id="new-q-d" required></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Đáp án đúng:</label>
+                        <select id="new-q-correct">
+                            <option value="0">A</option>
+                            <option value="1">B</option>
+                            <option value="2">C</option>
+                            <option value="3">D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mức độ:</label>
+                        <select id="new-q-level">
+                            <option value="khoidoch">Cơ bản</option>
+                            <option value="thuthach">Trung bình</option>
+                            <option value="chuyengia">Nâng cao</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Giải thích chi tiết:</label>
+                    <textarea id="new-q-exp" rows="2" required placeholder="Giải thích vì sao đáp án đúng..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Lưu Câu Hỏi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: TẠM DỪNG -->
+    <div class="modal" id="modal-pause">
+        <div class="modal-content" style="text-align: center; max-width: 400px;">
+            <h2 style="color: var(--neon-cyan); margin-bottom: 20px;">TRÒ CHƠI TẠM DỪNG</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button class="btn btn-primary" onclick="resumeGame()">▶ Tiếp Tục</button>
+                <button class="btn btn-secondary" onclick="goToScreen('screen-mode'); closeModal('modal-pause');">🎮 Về Chọn Chế Độ</button>
+                <button class="btn btn-danger" onclick="goToScreen('screen-home'); closeModal('modal-pause');">🏠 Về Trang Chủ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BỘ CÂU HỎI MẪU CHUẨN (30 CÂU) CHO MÔN NHẬP MÔN CÔNG NGHỆ SỐ ---
+        const defaultQuestions = [
+            {
+                q: "Khái niệm 'Công nghệ số' phản ánh điều gì trong thời đại hiện nay?",
+                options: [
+                    "Việc sử dụng các thiết bị cơ khí truyền thống trong sản xuất",
+                    "Quá trình xử lý thông tin dựa trên hệ thống mã nhị phân và tín hiệu số",
+                    "Chỉ bao gồm công nghệ phát thanh và truyền hình analog",
+                    "Việc lưu trữ tài liệu hoàn toàn bằng văn bản giấy"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Công nghệ số dựa trên nền tảng mã hóa nhị phân (0 và 1) để xử lý, truyền tải và lưu trữ thông tin hiệu quả."
+            },
+            {
+                q: "Đâu là yếu tố cốt lõi phân biệt giữa 'Dữ liệu' (Data) và 'Thông tin' (Information)?",
+                options: [
+                    "Dữ liệu là thông tin đã qua xử lý và có ý nghĩa cụ thể",
+                    "Dữ liệu là các sự kiện, con số thô chưa qua xử lý, còn thông tin là dữ liệu đã được tổ chức có ý nghĩa",
+                    "Dữ liệu chỉ tồn tại trên thiết bị di động, thông tin chỉ tồn tại trên máy tính bàn",
+                    "Không có sự khác biệt nào giữa dữ liệu và thông tin"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Dữ liệu thô sau khi được phân tích, tổng hợp và đặt trong ngữ cảnh sẽ trở thành thông tin hữu ích."
+            },
+            {
+                q: "Thành phần nào sau đây thuộc về phần mềm hệ thống (System Software)?",
+                options: ["Microsoft Word", "Hệ điều hành Windows", "Phần mềm diệt virus", "Trình duyệt Chrome"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Hệ điều hành (như Windows, Linux, macOS) là phần mềm hệ thống quản lý phần cứng và cung cấp nền tảng cho phần mềm ứng dụng."
+            },
+            {
+                q: "Giao thức nào được sử dụng phổ biến nhất để truyền tải các trang web an toàn trên Internet hiện nay?",
+                options: ["FTP", "HTTPS", "SMTP", "SSH"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "HTTPS (HyperText Transfer Protocol Secure) mã hóa dữ liệu truyền tải giữa trình duyệt và máy chủ web, đảm bảo an toàn."
+            },
+            {
+                q: "Điện toán đám mây (Cloud Computing) mang lại lợi ích nổi bật nào cho doanh nghiệp và cá nhân?",
+                options: [
+                    "Bắt buộc phải mua thêm ổ cứng vật lý để lưu trữ",
+                    "Khả năng truy cập dữ liệu mọi lúc, mọi nơi qua Internet với tài nguyên linh hoạt",
+                    "Làm giảm tốc độ xử lý dữ liệu của máy tính cá nhân",
+                    "Không cần kết nối mạng vẫn sử dụng đầy đủ tính năng đám mây"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Điện toán đám mây cho phép truy cập dữ liệu và dịch vụ linh hoạt qua Internet mà không phụ thuộc vào thiết bị lưu trữ cục bộ."
+            },
+            {
+                q: "Trí tuệ nhân tạo (AI) học hỏi từ đâu để đưa ra các dự đoán hoặc quyết định?",
+                options: [
+                    "Chỉ dựa vào cảm xúc của lập trình viên",
+                    "Dựa trên khối lượng dữ liệu huấn luyện lớn (Training Data) và các thuật toán học máy",
+                    "Tự phát sinh suy nghĩ độc lập hoàn toàn không cần dữ liệu",
+                    "Chỉ dựa vào phần cứng máy tính mạnh mà không cần phần mềm"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "AI và Học máy (Machine Learning) cần lượng dữ liệu lớn để huấn luyện, nhận diện mẫu và đưa ra quyết định dự đoán."
+            },
+            {
+                q: "Biện pháp nào dưới đây tạo ra một mật khẩu mạnh và an toàn nhất?",
+                options: [
+                    "Sử dụng ngày tháng năm sinh của bản thân để dễ nhớ",
+                    "Dùng dãy số liên tiếp như 12345678",
+                    "Kết hợp chữ hoa, chữ thường, số, ký tự đặc biệt với chiều dài tối thiểu 12 ký tự",
+                    "Sử dụng tên thú cưng kết hợp số điện thoại"
+                ],
+                correct: 2,
+                level: "khoidoch",
+                explanation: "Mật khẩu mạnh cần đủ độ dài và đa dạng ký tự để chống lại các cuộc tấn công dò mật khẩu (Brute-force)."
+            },
+            {
+                q: "Xác thực đa yếu tố (MFA / 2FA) hoạt động theo nguyên tắc nào?",
+                options: [
+                    "Chỉ cần nhập mật khẩu một lần là đăng nhập thành công",
+                    "Yêu cầu từ hai hình thức xác thực khác nhau trở lên (ví dụ: mật khẩu + mã OTP qua điện thoại)",
+                    "Cho phép nhiều người cùng đăng nhập vào một tài khoản cùng lúc",
+                    "Khóa tài khoản vĩnh viễn khi đăng nhập sai một lần"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "MFA kết hợp nhiều lớp xác thực (thứ bạn biết, thứ bạn có, thứ bạn là) giúp tăng cường bảo mật tài khoản."
+            },
+            {
+                q: "'Dấu vết số' (Digital Footprint) được hiểu là gì?",
+                options: [
+                    "Dấu chân thực tế để lại trên mặt đất khi sử dụng máy tính",
+                    "Dữ liệu và dấu vết thông tin mà người dùng để lại khi hoạt động trên môi trường trực tuyến",
+                    "Lịch sử bảo trì phần cứng máy tính",
+                    "Mã nguồn của các phần mềm ứng dụng"
+                ],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Dấu vết số bao gồm mọi hoạt động, bài đăng, lịch sử tìm kiếm và tương tác của bạn trên Internet."
+            },
+            {
+                q: "Công cụ nào sau đây hữu ích nhất cho việc làm việc nhóm và soạn thảo tài liệu trực tuyến đồng thời?",
+                options: ["Notepad ngoại tuyến", "Google Docs / Microsoft 365 Online", "Chương trình vẽ Paint đơn lẻ", "Trình phát nhạc Media Player"],
+                correct: 1,
+                level: "khoidoch",
+                explanation: "Các công cụ văn phòng điện toán đám mây cho phép nhiều thành viên cùng chỉnh sửa và cộng tác trực tuyến theo thời gian thực."
+            },
+            {
+                q: "Một sinh viên nhận được email yêu cầu đăng nhập vào trang web lạ để xác nhận tài khoản trường. Cách xử lý an toàn nhất?",
+                options: [
+                    "Nhấp vào liên kết vì email có logo trường",
+                    "Trả lời email và gửi mật khẩu để xác minh",
+                    "Kiểm tra địa chỉ người gửi, không nhấp vào liên kết đáng ngờ và xác minh qua kênh chính thức",
+                    "Chuyển tiếp email cho bạn bè để hỏi ý kiến rồi mới đăng nhập"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Logo có thể giả mạo. Luôn kiểm tra kỹ địa chỉ nguồn gửi và xác thực thông tin qua kênh chính thống của tổ chức."
+            },
+            {
+                q: "Khi đọc một bài viết trực tuyến có tựa đề giật gân, thông tin chưa được kiểm chứng, hành động đúng đắn của người học là gì?",
+                options: [
+                    "Chia sẻ ngay lên mạng xã hội cho nhiều người biết",
+                    "Tin tưởng tuyệt đối vì bài viết có nhiều lượt tương tác",
+                    "Kiểm tra nguồn gốc, đối chiếu với các cơ quan báo chí uy tín trước khi chia sẻ",
+                    "Xóa bỏ tài khoản mạng xã hội ngay lập tức"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Đánh giá độ tin cậy của thông tin đòi hỏi kỹ năng tư duy phản biện và kiểm chứng đa nguồn."
+            },
+            {
+                q: "Địa chỉ IP (Internet Protocol) có vai trò gì trong mạng máy tính?",
+                options: [
+                    "Định danh duy nhất cho mỗi thiết bị kết nối mạng để truyền gửi dữ liệu chính xác",
+                    "Tăng tốc độ kết nối đường truyền Internet lên gấp đôi",
+                    "Lưu trữ dữ liệu cá nhân của người dùng trên đám mây",
+                    "Ngăn chặn hoàn toàn các cuộc tấn công mạng từ bên ngoài"
+                ],
+                correct: 0,
+                level: "thuthach",
+                explanation: "Địa chỉ IP đóng vai trò như 'địa chỉ nhà' của thiết bị trong mạng Internet giúp gói tin đến đúng đích."
+            },
+            {
+                q: "Sự khác biệt chính giữa RAM và ổ cứng SSD trong máy tính là gì?",
+                options: [
+                    "RAM lưu trữ lâu dài khi tắt máy, SSD chỉ lưu trữ tạm thời",
+                    "RAM là bộ nhớ truy xuất ngẫu nhiên tốc độ cao, mất dữ liệu khi tắt máy; SSD lưu trữ dữ liệu lâu dài",
+                    "Cả RAM và SSD đều có chức năng hoàn toàn giống nhau",
+                    "SSD dùng để hiển thị hình ảnh, RAM dùng để kết nối Internet"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "RAM là bộ nhớ ngắn hạn tốc độ cao phục vụ tác vụ đang chạy; SSD là thiết bị lưu trữ dài hạn không bị mất dữ liệu khi tắt nguồn."
+            },
+            {
+                q: "Hành vi nào vi phạm đạo đức và quy tắc ứng xử trên môi trường số?",
+                options: [
+                    "Trích dẫn nguồn tài liệu khi sử dụng bài viết của người khác",
+                    "Tôn trọng quyền riêng tư và ý kiến của người dùng khác",
+                    "Đăng tải hình ảnh cá nhân người khác lên mạng khi chưa có sự đồng ý nhằm bôi nhọ",
+                    "Sử dụng phần mềm bản quyền hoặc mã nguồn mở tuân thủ giấy phép"
+                ],
+                correct: 2,
+                level: "thuthach",
+                explanation: "Đăng ảnh bôi nhọ hoặc xâm phạm quyền riêng tư là hành vi vi phạm pháp luật và đạo đức số nghiêm trọng."
+            },
+            {
+                q: "Bảo mật dữ liệu cá nhân trên mạng xã hội đạt hiệu quả cao nhất khi bạn thực hiện thao tác nào?",
+                options: [
+                    "Công khai toàn bộ số điện thoại, địa chỉ và ngày sinh lên trang cá nhân",
+                    "Thiết lập chế độ riêng tư cho tài khoản và hạn chế chia sẻ thông tin nhạy cảm",
+                    "Cho phép mọi ứng dụng bên thứ ba truy cập danh bạ",
+                    "Sử dụng chung một mật khẩu cho tất cả các nền tảng mạng xã hội"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Cấu hình quyền riêng tư chặt chẽ giúp bảo vệ thông tin cá nhân khỏi các nguy cơ thu thập dữ liệu trái phép."
+            },
+            {
+                q: "Khi máy tính bị nhiễm phần mềm độc hại (Malware), dấu hiệu nào thường xuất hiện?",
+                options: [
+                    "Máy chạy nhanh hơn bình thường và hiển thị nhiều tính năng mới",
+                    "Máy chạy chậm đột ngột, xuất hiện cửa sổ quảng cáo lạ, tệp tin bị mã hóa hoặc mất kiểm soát",
+                    "Thời lượng pin kéo dài gấp đôi",
+                    "Kết nối Internet ổn định và bảo mật tuyệt đối"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Malware thường làm tiêu tốn tài nguyên hệ thống, gây chậm máy, hiển thị quảng cáo rác hoặc tống tiền dữ liệu (Ransomware)."
+            },
+            {
+                q: "Khái niệm 'Dữ liệu lớn' (Big Data) được trưng bày qua các đặc tính nào?",
+                options: [
+                    "Chỉ có dung lượng lớn nhưng tốc độ xử lý chậm",
+                    "Đặc trưng bởi các yếu tố: Khối lượng (Volume), Tốc độ (Velocity), Đa dạng (Variety), Độ chính xác (Veracity) và Giá trị (Value)",
+                    "Chỉ bao gồm dữ liệu dạng văn bản đơn thuần",
+                    "Dữ liệu chỉ lưu trữ trên một máy tính cá nhân duy nhất"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Big Data được định nghĩa qua mô hình các chữ V (Volume, Velocity, Variety, Veracity, Value) đòi hỏi công cụ xử lý chuyên biệt."
+            },
+            {
+                q: "Tường lửa (Firewall) trong hệ thống mạng có chức năng chính là gì?",
+                options: [
+                    "Làm mát phần cứng máy tính khi hoạt động quá công suất",
+                    "Kiểm soát và lọc lưu lượng truy cập ra vào mạng dựa trên các quy tắc bảo mật đã thiết lập",
+                    "Tăng tốc độ tải xuống tệp tin từ Internet",
+                    "Tự động viết mã nguồn phần mềm cho lập trình viên"
+                ],
+                correct: 1,
+                level: "thuthach",
+                explanation: "Tường lửa đóng vai trò là 'cổng gác' kiểm soát các gói tin ra vào, ngăn chặn truy cập trái phép vào hệ thống."
+            },
+            {
+                q: "Khi thực hiện học tập trực tuyến, việc sử dụng các công cụ lưu trữ đám mây giúp sinh viên giải quyết vấn đề gì?",
+                options: [
+                    "Tránh tình trạng mất bài tập khi máy tính cá nhân hỏng hóc",
+                    "Dễ dàng chia sẻ tài liệu và làm việc nhóm từ xa",
+                    "Đồng bộ hóa dữ liệu giữa laptop, máy tính bảng và điện thoại",
+                    "Tất cả các phương án trên đều chính xác"
+                ],
+                correct: 3,
+                level: "thuthach",
+                explanation: "Lưu trữ đám mây mang lại sự an toàn dữ liệu, khả năng cộng tác nhóm và đồng bộ hóa đa thiết bị tối ưu."
+            },
+            {
+                q: "Tình huống: Một người lạ gửi tin nhắn qua mạng xã hội thông báo bạn trúng thưởng lớn nhưng yêu cầu nộp trước một khoản phí nhỏ qua thẻ cào. Bạn nên ứng xử thế nào?",
+                options: [
+                    "Nộp phí ngay để nhận phần thưởng giá trị",
+                    "Cung cấp thông tin tài khoản ngân hàng cho họ",
+                    "Nhận diện đây là thủ đoạn lừa đảo trực tuyến phổ biến, chặn và báo cáo tài khoản đó",
+                    "Hỏi mượn tiền người thân để nộp phí nhận thưởng"
+                ],
+                correct: 2,
+                level: "chuyengia",
+                explanation: "Yêu cầu nộp phí trước để nhận thưởng là dấu hiệu kinh điển của lừa đảo trực tuyến (Scam/Phishing)."
+            },
+            {
+                q: "Tại sao việc sử dụng các phần mềm bẻ khóa (Crack) không có bản quyền lại tiềm ẩn rủi ro lớn về an toàn thông tin?",
+                options: [
+                    "Vì phần mềm crack thường bị nhà phát triển chính hãng phạt tiền trực tiếp",
+                    "Vì các bản crack thường được đính kèm mã độc, phần mềm gián điệp hoặc backdoor đánh cắp dữ liệu",
+                    "Vì phần mềm crack chạy nhanh hơn phần mềm bản quyền",
+                    "Không có rủi ro nào đáng kể"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Phần mềm crack thường bị can thiệp mã nguồn, ẩn chứa mã độc tống tiền hoặc đánh cắp thông tin đăng nhập của người dùng."
+            },
+            {
+                q: "Trong bối cảnh chuyển đổi số, năng lực số (Digital Competence) của sinh viên đại học bao gồm yếu tố nào?",
+                options: [
+                    "Chỉ biết cách chơi game và lướt mạng xã hội",
+                    "Khả năng tìm kiếm, đánh giá, sáng tạo nội dung số và ứng dụng công nghệ có trách nhiệm, an toàn",
+                    "Khả năng sửa chữa phần cứng điện thoại di động",
+                    "Chỉ cần biết sử dụng Microsoft Word cơ bản"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Năng lực số là tập hợp toàn diện các kỹ năng từ thông tin, truyền thông, sáng tạo nội dung đến an toàn thông tin số."
+            },
+            {
+                q: "Hành động nào thể hiện tư duy bảo mật chủ động khi sử dụng mạng Wi-Fi công cộng tại quán cà phê?",
+                options: [
+                    "Truy cập tài khoản ngân hàng và giao dịch tài chính thoải mái",
+                    "Sử dụng mạng riêng ảo (VPN) và hạn chế truy cập các tài khoản nhạy cảm trên mạng không bảo mật",
+                    "Tắt hoàn toàn phần mềm diệt virus trên máy tính",
+                    "Chia sẻ mật khẩu Wi-Fi cho tất cả mọi người xung quanh"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Wi-Fi công cộng dễ bị tấn công kiểu 'Man-in-the-middle'. Sử dụng VPN giúp mã hóa dữ liệu truyền qua các mạng không an toàn này."
+            },
+            {
+                q: "Khi doanh nghiệp áp dụng mô hình Điện toán đám mây dạng SaaS (Software as a Service), người dùng cuối sử dụng dịch vụ như thế nào?",
+                options: [
+                    "Phải tự lập trình lại toàn bộ hệ điều hành từ đầu",
+                    "Sử dụng phần mềm trực tiếp qua trình duyệt web mà không cần cài đặt phức tạp (ví dụ: Google Workspace, Microsoft 365)",
+                    "Phải mua máy chủ vật lý đặt tại văn phòng",
+                    "Chỉ được phép sử dụng ngoại tuyến"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "SaaS cung cấp ứng dụng phần mềm qua Internet dưới dạng dịch vụ sẵn sàng sử dụng (như Gmail, Google Docs)."
+            },
+            {
+                q: "Trí tuệ nhân tạo tạo sinh (Generative AI như ChatGPT, Claude) hỗ trợ sinh viên học tập hiệu quả nhất khi được sử dụng theo cách nào?",
+                options: [
+                    "Để AI làm thay toàn bộ bài tập và luận văn mà không cần kiểm chứng",
+                    "Sử dụng làm trợ lý ảo giải thích khái niệm, gợi ý ý tưởng và hỗ trợ tổng hợp tài liệu dưới sự kiểm soát và tư duy phản biện của bản thân",
+                    "Tin tưởng tuyệt đối vào mọi thông tin do AI cung cấp mà không cần đối chiếu",
+                    "Dùng để phát tán tin giả trên mạng xã hội"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "AI tạo sinh là trợ lý đắc lực hỗ trợ học tập khi sinh viên giữ vai trò chủ động kiểm chứng, tư duy và phản biện."
+            },
+            {
+                q: "Chính sách bảo vệ dữ liệu cá nhân (như GDPR tại châu Âu hoặc các nghị định tại Việt Nam) nhằm mục đích cốt lõi gì?",
+                options: [
+                    "Ngăn cấm hoàn toàn việc trao đổi thông tin trên Internet",
+                    "Trao cho cá nhân quyền kiểm soát dữ liệu của mình và buộc các tổ chức thu thập dữ liệu phải có trách nhiệm minh bạch, bảo mật",
+                    "Làm chậm quá trình phát triển công nghệ số",
+                    "Chỉ bảo vệ dữ liệu của các cơ quan chính phủ"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Các quy định bảo vệ dữ liệu đặt quyền kiểm soát thông tin cá nhân vào tay người dùng và yêu cầu doanh nghiệp tuân thủ chuẩn bảo mật."
+            },
+            {
+                q: "Trong an toàn thông tin, nguyên tắc 'Đặc quyền tối thiểu' (Principle of Least Privilege) có ý nghĩa gì?",
+                options: [
+                    "Cấp quyền truy cập tối đa cho tất cả người dùng trong hệ thống để tiện làm việc",
+                    "Chỉ cấp cho người dùng hoặc tiến trình những quyền hạn tối thiểu cần thiết để hoàn thành nhiệm vụ được giao",
+                    "Không cho phép bất kỳ ai truy cập vào hệ thống máy chủ",
+                    "Mọi nhân viên đều có quyền quản trị tối cao (Admin)"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Nguyên tắc đặc quyền tối thiểu giúp giới hạn phạm vi thiệt hại nếu một tài khoản bị xâm phạm hoặc rò rỉ."
+            },
+            {
+                q: "Khi thực hiện nghiên cứu tài liệu trên Internet cho bài tập lớn, phương pháp đánh giá tính xác thực của nguồn tin nào chuyên nghiệp nhất?",
+                options: [
+                    "Chỉ đọc các bài đăng trên blog cá nhân không rõ tác giả",
+                    "Tham khảo các tạp chí khoa học có phản biện (peer-reviewed), sách chuyên khảo và cổng thông tin chính thống của các tổ chức giáo dục",
+                    "Dựa vào số lượng lượt xem và lượt thích trên mạng xã hội",
+                    "Chỉ sử dụng thông tin từ các video giải trí ngắn"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Nguồn tin học thuật có phản biện và các tổ chức chính thống đảm bảo tính khách quan, kiểm chứng và độ tin cậy cao nhất."
+            },
+            {
+                q: "Hành vi ứng xử có văn hóa và trách nhiệm trên môi trường số (Digital Citizenship) đòi hỏi điều gì ở sinh viên?",
+                options: [
+                    "Ẩn danh để công kích và lăng mạ người khác trên không gian mạng",
+                    "Tôn trọng bản quyền tác giả, ứng xử lịch sự, bảo vệ thông tin cá nhân và lan tỏa tri thức tích cực",
+                    "Sử dụng tài khoản giả để thao túng dư luận",
+                    "Sao chép toàn bộ bài làm của người khác mà không trích dẫn"
+                ],
+                correct: 1,
+                level: "chuyengia",
+                explanation: "Công dân số có trách nhiệm luôn tôn trọng pháp luật, đạo đức, bản quyền và xây dựng cộng đồng mạng lành mạnh."
+            }
+        ];
+
+        // --- GAME STATE ---
+        let questions = [];
+        let currentQuizQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let maxStreak = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let timer = null;
+        let timeLeft = 30;
+        let currentMode = 'thuthach';
+        let isAnswerLocked = false;
+        let soundEnabled = true;
+        let gameStartTime = 0;
+
+        // Load questions from LocalStorage or Fallback to Default
+        function loadQuestionsData() {
+            const saved = localStorage.getItem('digital_quest_questions');
+            if (saved) {
+                try {
+                    questions = JSON.parse(saved);
+                } catch(e) {
+                    questions = [...defaultQuestions];
+                }
+            } else {
+                questions = [...defaultQuestions];
+            }
+            updateAdminQuestionList();
+        }
+
+        function saveQuestionsData() {
+            localStorage.setItem('digital_quest_questions', JSON.stringify(questions));
+            updateAdminQuestionList();
+        }
+
+        // --- WEB AUDIO API (No external assets required) ---
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.setValueAtTime(150, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                }
+            } catch(e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('btn-sound');
+            btn.textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        // --- NAVIGATION & SCREENS ---
+        function goToScreen(screenId) {
+            playSound('click');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if(screenId !== 'screen-quiz') {
+                clearInterval(timer);
+            }
+        }
+
+        function openModal(modalId) {
+            playSound('click');
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            playSound('click');
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Không thể chuyển chế độ toàn màn hình: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz(mode) {
+            playSound('click');
+            currentMode = mode;
+            
+            // Filter questions based on mode or pick random subset of 10
+            let pool = [...questions];
+            if (mode === 'khoidoch') {
+                pool = questions.filter(q => q.level === 'khoidoch');
+                if (pool.length < 5) pool = [...questions];
+            } else if (mode === 'chuyengia') {
+                pool = questions.filter(q => q.level === 'chuyengia');
+                if (pool.length < 5) pool = [...questions];
+            }
+
+            // Shuffle pool
+            pool.sort(() => Math.random() - 0.5);
+            
+            // Take 10 questions max
+            currentQuizQuestions = pool.slice(0, 10);
+            if (currentQuizQuestions.length === 0) currentQuizQuestions = [...questions].slice(0, 5);
+
+            // Reset state
+            currentIndex = 0;
+            score = 0;
+            streak = 0;
+            maxStreak = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            gameStartTime = Date.now();
+
+            const modeNames = {
+                'khoidoch': 'Khởi Động',
+                'thuthach': 'Thử Thách',
+                'chuyengia': 'Chuyên Gia',
+                'sinhton': 'Sinh Tồn'
+            };
+            document.getElementById('lbl-mode-name').textContent = modeNames[mode] || 'Thử Thách';
+
+            goToScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswerLocked = false;
+            clearInterval(timer);
+
+            if (currentIndex >= currentQuizQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const qData = currentQuizQuestions[currentIndex];
+            
+            // Update Progress & UI
+            document.getElementById('lbl-question-progress').textContent = `Câu hỏi ${currentIndex + 1} / ${currentQuizQuestions.length}`;
+            const progressPercent = ((currentIndex) / currentQuizQuestions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('lbl-score').textContent = score;
+            document.getElementById('lbl-streak').textContent = streak;
+            document.getElementById('lbl-question-content').textContent = qData.q;
+
+            // Hide feedback
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.classList.remove('show');
+            document.getElementById('btn-next').style.display = 'none';
+
+            // Shuffle options while preserving correct answer mapping
+            let optionsWithIndex = qData.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+            optionsWithIndex.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const markers = ['A', 'B', 'C', 'D'];
+            optionsWithIndex.forEach((item, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-marker">${markers[idx]}.</span> <span>${item.text}</span>`;
+                btn.onclick = () => selectAnswer(item.originalIndex, qData.correct, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Timer setup (30s per question)
+            timeLeft = currentMode === 'khoidoch' ? 45 : 30;
+            document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeout(qData.correct);
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(selectedIndex, correctIndex, selectedBtn) {
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+            clearInterval(timer);
+
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            let isCorrect = (selectedIndex === correctIndex);
+            const qData = currentQuizQuestions[currentIndex];
+
+            // Highlight buttons
+            buttons.forEach(btn => {
+                const markerText = btn.querySelector('.option-marker').textContent.replace('.', '').trim();
+                const mapMarkerToIdx = {'A':0, 'B':1, 'C':2, 'D':3};
+                const actualIdx = mapMarkerToIdx[markerText];
+                
+                if (actualIdx === correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (actualIdx === selectedIndex && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            feedbackBox.classList.add('show');
+
+            if (isCorrect) {
+                playSound('correct');
+                correctCount++;
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+
+                // Scoring formula: Base 100 + speed bonus + streak bonus
+                let speedBonus = Math.floor(timeLeft * 1.5);
+                let streakBonus = Math.min(streak * 10, 50);
+                let earnedScore = 100 + speedBonus + streakBonus;
+                score += earnedScore;
+
+                document.getElementById('lbl-score').textContent = score;
+                document.getElementById('lbl-streak').textContent = streak;
+
+                feedbackTitle.style.color = 'var(--accent-green)';
+                feedbackTitle.textContent = `CHÍNH XÁC! (+${earnedScore} điểm)`;
+                feedbackText.textContent = qData.explanation;
+            } else {
+                playSound('incorrect');
+                incorrectCount++;
+                streak = 0;
+                document.getElementById('lbl-streak').textContent = streak;
+
+                feedbackTitle.style.color = 'var(--accent-red)';
+                feedbackTitle.textContent = 'CHƯA CHÍNH XÁC!';
+                feedbackText.textContent = qData.explanation;
+            }
+
+            document.getElementById('btn-next').style.display = 'inline-flex';
+        }
+
+        function handleTimeout(correctIndex) {
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            buttons.forEach(btn => {
+                const markerText = btn.querySelector('.option-marker').textContent.replace('.', '').trim();
+                const mapMarkerToIdx = {'A':0, 'B':1, 'C':2, 'D':3};
+                if (mapMarkerToIdx[markerText] === correctIndex) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            playSound('incorrect');
+            incorrectCount++;
+            streak = 0;
+            document.getElementById('lbl-streak').textContent = streak;
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            feedbackBox.classList.add('show');
+
+            feedbackTitle.style.color = 'var(--accent-red)';
+            feedbackTitle.textContent = 'HẾT THỜI GIAN!';
+            feedbackText.textContent = currentQuizQuestions[currentIndex].explanation;
+
+            document.getElementById('btn-next').style.display = 'inline-flex';
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function pauseGame() {
+            if(document.getElementById('screen-quiz').classList.contains('active')) {
+                clearInterval(timer);
+                openModal('modal-pause');
+            }
+        }
+
+        function resumeGame() {
+            closeModal('modal-pause');
+            if (!isAnswerLocked && timeLeft > 0) {
+                timer = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('lbl-timer').textContent = `⏱️ ${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        handleTimeout(currentQuizQuestions[currentIndex].correct);
+                    }
+                }, 1000);
+            }
+        }
+
+        function endQuiz() {
+            goToScreen('screen-result');
+            
+            const totalQ = currentQuizQuestions.length;
+            const accuracy = totalQ > 0 ? Math.round((correctCount / totalQ) * 100) : 0;
+            
+            document.getElementById('res-score').textContent = score;
+            document.getElementById('res-correct').textContent = `${correctCount}/${totalQ}`;
+            document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('res-streak').textContent = maxStreak;
+
+            // Achievement Badge & Positive Feedback
+            let badge = '🛡️ TÂN BINH SỐ';
+            let comment = 'Khởi đầu tốt! Hãy tiếp tục rèn luyện để nắm vững kiến thức công nghệ số nhé.';
+
+            if (accuracy >= 90) {
+                badge = '👑 BẬC THẦY CÔNG NGHỆ';
+                comment = 'Xuất sắc tuyệt đối! Bạn đã làm chủ hoàn toàn các kiến thức cốt lõi của môn Nhập môn Công nghệ số.';
+            } else if (accuracy >= 70) {
+                badge = '💻 CHUYÊN GIA DỮ LIỆU';
+                comment = 'Kết quả rất ấn tượng! Kiến thức công nghệ số của bạn cực kỳ vững vàng.';
+            } else if (accuracy >= 50) {
+                badge = '🚀 NHÀ KHÁM PHÁ SỐ';
+                comment = 'Cố gắng rất tốt! Ôn tập thêm một chút nữa là bạn sẽ đạt kết quả hoàn hảo.';
+            }
+
+            document.getElementById('res-badge').textContent = badge;
+            document.getElementById('res-comment').textContent = comment;
+        }
+
+        function restartQuiz() {
+            startQuiz(currentMode);
+        }
+
+        // --- ADMIN & QUESTION MANAGEMENT ---
+        function updateAdminQuestionList() {
+            const listContainer = document.getElementById('admin-question-list');
+            document.getElementById('admin-total-q').textContent = questions.length;
+            listContainer.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-q-item';
+                item.innerHTML = `
+                    <div style="flex: 1; padding-right: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <b>#${idx + 1}</b> [${q.level}] ${q.q}
+                    </div>
+                    <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.75rem;" onclick="deleteQuestion(${idx})">Xóa</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function openAddQuestionForm() {
+            openModal('modal-add-q');
+        }
+
+        function saveNewQuestion(event) {
+            event.preventDefault();
+            const text = document.getElementById('new-q-text').value.trim();
+            const a = document.getElementById('new-q-a').value.trim();
+            const b = document.getElementById('new-q-b').value.trim();
+            const c = document.getElementById('new-q-c').value.trim();
+            const d = document.getElementById('new-q-d').value.trim();
+            const correct = parseInt(document.getElementById('new-q-correct').value);
+            const level = document.getElementById('new-q-level').value;
+            const exp = document.getElementById('new-q-exp').value.trim();
+
+            if (!text || !a || !b || !c || !d || !exp) {
+                alert('Vui lòng điền đầy đủ thông tin câu hỏi!');
+                return;
+            }
+
+            const newQ = {
+                q: text,
+                options: [a, b, c, d],
+                correct: correct,
+                level: level,
+                explanation: exp
+            };
+
+            questions.push(newQ);
+            saveQuestionsData();
+            closeModal('modal-add-q');
+            alert('Đã thêm câu hỏi thành công!');
+            event.target.reset();
+        }
+
+        function deleteQuestion(index) {
+            if (confirm(`Bạn có chắc chắn muốn xóa câu hỏi #${index + 1} không?`)) {
+                questions.splice(index, 1);
+                saveQuestionsData();
+            }
+        }
+
+        function resetDefaultQuestions() {
+            if (confirm('Bạn có chắc muốn khôi phục bộ câu hỏi mẫu mặc định ban đầu không? Mọi thay đổi sẽ bị ghi đè.')) {
+                questions = [...defaultQuestions];
+                saveQuestionsData();
+                alert('Đã khôi phục bộ câu hỏi mẫu thành công!');
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "digital_quest_questions.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importJSON(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function (e) {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if (Array.isArray(imported) && imported.length > 0) {
+                            questions = imported;
+                            saveQuestionsData();
+                            alert(`Đã nhập thành công ${questions.length} câu hỏi vào hệ thống!`);
+                        } else {
+                            alert('Tệp JSON không hợp lệ hoặc không chứa dữ liệu câu hỏi.');
+                        }
+                    } catch (error) {
+                        alert('Lỗi đọc tệp JSON: ' + error.message);
+                    }
+                };
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            loadQuestionsData();
+        };
+    </script>
+</body>
+</html>
